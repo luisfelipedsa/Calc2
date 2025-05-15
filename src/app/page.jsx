@@ -107,11 +107,12 @@ function reducer(state, { type, payload }) {
       if (state.currentOperand === null && state.previousOperand === null) {
         return state;
       }
-      if (state.previousOperand == null) return state;
-      if (state.currentOperand == null) return state;
-       if (state.currentOperand.length === 1) {
+      if (state.currentOperand.length === 1) {
         return { ...state, currentOperand: null };
       }
+      if (state.previousOperand == null) return state;
+      if (state.currentOperand == null) return state;
+       
 
       return {
         ...state,
