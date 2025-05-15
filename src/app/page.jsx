@@ -65,16 +65,6 @@ function reducer(state, { type, payload }) {
       return {};
 
     case ACTIONS.DELETE_DIGIT:
-      if (state.overwrite && state.currentOperand.length === 1) {
-        return { ...state, currentOperand: null };
-      }
-      if (state.overwrite && state.currentOperand > 1) {
-        return {
-          ...state,
-          overwrite: false,
-          currentOperand: state.currentOperand.slice(0, -1),
-        };
-      }
       if (state.overwrite) {
         return {
           ...state,
@@ -82,7 +72,7 @@ function reducer(state, { type, payload }) {
           currentOperand: null,
         };
       }
-      if (state.previousOperand === "") {
+      if (state.previousOperand === ''){
         return {
           ...state,
           previousOperand: null,
@@ -94,11 +84,7 @@ function reducer(state, { type, payload }) {
           operation: null,
         };
       }
-      if (
-        state.currentOperand === null &&
-        state.operation === null &&
-        state.previousOperand !== null
-      ) {
+      if (state.currentOperand === null && state.operation === null && state.previousOperand !== null) {
         return {
           ...state,
           previousOperand: state.previousOperand.slice(0, -1),
@@ -110,9 +96,21 @@ function reducer(state, { type, payload }) {
       if (state.currentOperand.length === 1) {
         return { ...state, currentOperand: null };
       }
+      if(state.currentOperand.length > 1){
+        return {
+          ...state,
+          currentOperand: state.currentOperand.slice(0, -1),
+        };
+      }
       if (state.previousOperand == null) return state;
       if (state.currentOperand == null) return state;
-       
+
+      if (state.currentOperand.length > 1) {
+        return {
+        ...state,
+        currentOperand: state.currentOperand.slice(0, -1),
+      };
+      }
 
       return {
         ...state,
@@ -135,8 +133,8 @@ function evaluate({ currentOperand, previousOperand, operation }) {
   const curr = parseFloat(currentOperand);
   if (isNaN(prev) || isNaN(curr)) return "";
   let computation = "";
-  const fr = "";
-  const frn = [];
+  const fr = ''
+  const frn =[]
   switch (operation) {
     case "+":
       computation = prev + curr;
@@ -153,9 +151,12 @@ function evaluate({ currentOperand, previousOperand, operation }) {
     default:
       return "";
   }
+  
+  return  computation.toString()
+  
+  
+  }
 
-  return computation.toString();
-}
 
 export default function Home() {
   const [theme, setTheme] = useState(true);
@@ -171,8 +172,8 @@ export default function Home() {
       return;
 
     const result = evaluate({ currentOperand, previousOperand, operation });
-    console.log(result);
-    console.log(result.length);
+    console.log(result)
+    console.log(result.length)
 
     setHist((prev) => [
       ...prev,
@@ -190,7 +191,7 @@ export default function Home() {
       } text-white overflow-hidden`}
     >
       <div
-        className={`fixed top-0 left-0 h-full bg-gray-800 text-white flex flex-col items-start gap-10 pt-10 pl-10 transition-all duration-500 ease-in-out
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white flex flex-col items-start gap-10 pt-10 pl-10 transition-all duration-500 ease-in-out overflow-y-auto max-h-screen
     ${
       sideBar
         ? "translate-x-0 opacity-100 w-105 max-sm:w-50"
