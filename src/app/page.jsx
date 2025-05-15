@@ -59,6 +59,7 @@ function reducer(state, { type, payload }) {
         operation: payload.operation,
         currentOperand: null,
       };
+      // PAREI AQUI
 
     case ACTIONS.CLEAR:
       return {};
@@ -150,12 +151,12 @@ export default function Home() {
       } text-white overflow-hidden`}
     >
       <div className={`fixed top-0 left-0 h-full bg-gray-800 text-white flex flex-col items-start gap-10 pt-10 pl-10 transition-all duration-500 ease-in-out
-    ${sideBar ? 'translate-x-0 opacity-100 w-105' : '-translate-x-full opacity-0 w-64'}
+    ${sideBar ? 'translate-x-0 opacity-100 w-105 max-sm:w-50' : '-translate-x-full opacity-0 w-64'}
   `}
 >       {hist.map((item, index) => (
           <div
             key={index}
-            className="bg-gray-700 p-4 rounded-lg mb-2 w-64 text-sm"
+            className="bg-gray-700 p-4 rounded-lg mb-2 w-64 text-sm max-sm:w-32"
           >
             {item}
           </div>
@@ -171,7 +172,7 @@ export default function Home() {
             </span>
             <span>{currentOperand}</span>
           </div>
-          <div className="grid grid-cols-4 mt-10 ml-6 gap-4">
+          <div className="grid grid-cols-4 mt-10 ml-6 gap-4 max-sm:ml-2">
             <button
               onClick={() => dispatch({ type: ACTIONS.CLEAR })}
               className="bg-gray-600 text-red-500 rounded-full text-3xl w-20 h-20 cursor-pointer hover:bg-gray-400 duration-300 ease-in hover:text-2xl"
@@ -187,18 +188,18 @@ export default function Home() {
             <button onClick={() => setSideBar(!sideBar)} className="bg-gray-900 text-white rounded-full font-bold text-2xl w-20 h-20 cursor-pointer hover:bg-gray-400 duration-300 ease-in hover:text-xl pl-5">
               <History size={40} />
             </button>
-            <BtnO operation="/" dispatch={dispatch} />
-            <BtnD digit="7" dispatch={dispatch} />
-            <BtnD digit="8" dispatch={dispatch} />
-            <BtnD digit="9" dispatch={dispatch} />
-            <BtnO operation="X" dispatch={dispatch} />
-            <BtnD digit="4" dispatch={dispatch} />
-            <BtnD digit="5" dispatch={dispatch} />
-            <BtnD digit="6" dispatch={dispatch} />
-            <BtnO operation="-" dispatch={dispatch} />
-            <BtnD digit="1" dispatch={dispatch} />
-            <BtnD digit="2" dispatch={dispatch} />
-            <BtnD digit="3" dispatch={dispatch} />
+            <BtnO operation="/" dispatch={dispatch} theme={theme}/>
+            <BtnD digit="7" dispatch={dispatch} theme={theme} />
+            <BtnD digit="8" dispatch={dispatch} theme={theme} />
+            <BtnD digit="9" dispatch={dispatch} theme={theme} />
+            <BtnO operation="X" dispatch={dispatch} theme={theme}/>
+            <BtnD digit="4" dispatch={dispatch} theme={theme} />
+            <BtnD digit="5" dispatch={dispatch} theme={theme} />
+            <BtnD digit="6" dispatch={dispatch} theme={theme}/>
+            <BtnO operation="-" dispatch={dispatch}  theme={theme}/>
+            <BtnD digit="1" dispatch={dispatch} theme={theme}/>
+            <BtnD digit="2" dispatch={dispatch}theme={theme} />
+            <BtnD digit="3" dispatch={dispatch}theme={theme} />
             <BtnP operation="+" dispatch={dispatch} />
             <button
               onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}
@@ -206,8 +207,8 @@ export default function Home() {
             >
               <Delete size={40}/>
             </button>
-            <BtnD digit="0" dispatch={dispatch} />
-            <BtnD digit="." dispatch={dispatch} />
+            <BtnD digit="0" dispatch={dispatch} theme={theme}/>
+            <BtnD digit="." dispatch={dispatch} theme={theme}/>
             <button
               onClick={handleEvaluate}
               className="bg-green-600 text-white rounded-full font-bold text-5xl w-20 h-20 pb-3 cursor-pointer hover:bg-gray-400 duration-300 ease-in hover:text-4xl"
