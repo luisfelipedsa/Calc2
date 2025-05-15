@@ -4,7 +4,7 @@ import BtnO from "@/componetns/BtnO";
 import BtnP from "@/componetns/BtnP";
 import { SunMoon, History } from "lucide-react";
 import { useReducer, useState } from "react";
-import { Delete } from 'lucide-react';
+import { Delete } from "lucide-react";
 
 export const ACTIONS = {
   ADD_DIGIT: "add-digit",
@@ -59,12 +59,22 @@ function reducer(state, { type, payload }) {
         operation: payload.operation,
         currentOperand: null,
       };
-      // PAREI AQUI
+    // PAREI AQUI
 
     case ACTIONS.CLEAR:
       return {};
 
     case ACTIONS.DELETE_DIGIT:
+      if (state.overwrite && state.currentOperand.length === 1) {
+        return { ...state, currentOperand: null };
+      }
+      if (state.overwrite && state.currentOperand > 1) {
+        return {
+          ...state,
+          overwrite: false,
+          currentOperand: state.currentOperand.slice(0, -1),
+        };
+      }
       if (state.overwrite) {
         return {
           ...state,
@@ -72,10 +82,37 @@ function reducer(state, { type, payload }) {
           currentOperand: null,
         };
       }
+      if (state.previousOperand === "") {
+        return {
+          ...state,
+          previousOperand: null,
+        };
+      }
+      if (state.currentOperand === null && state.operation !== null) {
+        return {
+          ...state,
+          operation: null,
+        };
+      }
+      if (
+        state.currentOperand === null &&
+        state.operation === null &&
+        state.previousOperand !== null
+      ) {
+        return {
+          ...state,
+          previousOperand: state.previousOperand.slice(0, -1),
+        };
+      }
+      if (state.currentOperand === null && state.previousOperand === null) {
+        return state;
+      }
+      if (state.previousOperand == null) return state;
       if (state.currentOperand == null) return state;
-      if (state.currentOperand.length === 1) {
+       if (state.currentOperand.length === 1) {
         return { ...state, currentOperand: null };
       }
+
       return {
         ...state,
         currentOperand: state.currentOperand.slice(0, -1),
@@ -97,6 +134,8 @@ function evaluate({ currentOperand, previousOperand, operation }) {
   const curr = parseFloat(currentOperand);
   if (isNaN(prev) || isNaN(curr)) return "";
   let computation = "";
+  const fr = "";
+  const frn = [];
   switch (operation) {
     case "+":
       computation = prev + curr;
@@ -113,6 +152,7 @@ function evaluate({ currentOperand, previousOperand, operation }) {
     default:
       return "";
   }
+
   return computation.toString();
 }
 
@@ -126,14 +166,12 @@ export default function Home() {
   );
 
   const handleEvaluate = () => {
-    if (
-      operation == null ||
-      currentOperand == null ||
-      previousOperand == null
-    )
+    if (operation == null || currentOperand == null || previousOperand == null)
       return;
 
     const result = evaluate({ currentOperand, previousOperand, operation });
+    console.log(result);
+    console.log(result.length);
 
     setHist((prev) => [
       ...prev,
@@ -150,10 +188,17 @@ export default function Home() {
         theme ? "from-gray-950 to-gray-900" : "from-zinc-400 to-zinc-300"
       } text-white overflow-hidden`}
     >
-      <div className={`fixed top-0 left-0 h-full bg-gray-800 text-white flex flex-col items-start gap-10 pt-10 pl-10 transition-all duration-500 ease-in-out
-    ${sideBar ? 'translate-x-0 opacity-100 w-105 max-sm:w-50' : '-translate-x-full opacity-0 w-64'}
+      <div
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white flex flex-col items-start gap-10 pt-10 pl-10 transition-all duration-500 ease-in-out
+    ${
+      sideBar
+        ? "translate-x-0 opacity-100 w-105 max-sm:w-50"
+        : "-translate-x-full opacity-0 w-64"
+    }
   `}
->       {hist.map((item, index) => (
+      >
+        {" "}
+        {hist.map((item, index) => (
           <div
             key={index}
             className="bg-gray-700 p-4 rounded-lg mb-2 w-64 text-sm max-sm:w-32"
@@ -161,7 +206,6 @@ export default function Home() {
             {item}
           </div>
         ))}
-
       </div>
       <div className="flex justify-center items-center w-full">
         <div className="h-[750px] w-[500px] bg-black rounded-2xl">
@@ -185,30 +229,33 @@ export default function Home() {
             >
               <SunMoon size={40} />
             </button>
-            <button onClick={() => setSideBar(!sideBar)} className="bg-gray-900 text-white rounded-full font-bold text-2xl w-20 h-20 cursor-pointer hover:bg-gray-400 duration-300 ease-in hover:text-xl pl-5">
+            <button
+              onClick={() => setSideBar(!sideBar)}
+              className="bg-gray-900 text-white rounded-full font-bold text-2xl w-20 h-20 cursor-pointer hover:bg-gray-400 duration-300 ease-in hover:text-xl pl-5"
+            >
               <History size={40} />
             </button>
-            <BtnO operation="/" dispatch={dispatch} theme={theme}/>
+            <BtnO operation="/" dispatch={dispatch} theme={theme} />
             <BtnD digit="7" dispatch={dispatch} theme={theme} />
             <BtnD digit="8" dispatch={dispatch} theme={theme} />
             <BtnD digit="9" dispatch={dispatch} theme={theme} />
-            <BtnO operation="X" dispatch={dispatch} theme={theme}/>
+            <BtnO operation="X" dispatch={dispatch} theme={theme} />
             <BtnD digit="4" dispatch={dispatch} theme={theme} />
             <BtnD digit="5" dispatch={dispatch} theme={theme} />
-            <BtnD digit="6" dispatch={dispatch} theme={theme}/>
-            <BtnO operation="-" dispatch={dispatch}  theme={theme}/>
-            <BtnD digit="1" dispatch={dispatch} theme={theme}/>
-            <BtnD digit="2" dispatch={dispatch}theme={theme} />
-            <BtnD digit="3" dispatch={dispatch}theme={theme} />
+            <BtnD digit="6" dispatch={dispatch} theme={theme} />
+            <BtnO operation="-" dispatch={dispatch} theme={theme} />
+            <BtnD digit="1" dispatch={dispatch} theme={theme} />
+            <BtnD digit="2" dispatch={dispatch} theme={theme} />
+            <BtnD digit="3" dispatch={dispatch} theme={theme} />
             <BtnP operation="+" dispatch={dispatch} />
             <button
               onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}
               className="bg-gray-900 text-white rounded-full font-bold text-2xl w-20 h-20 cursor-pointer hover:bg-gray-400 duration-300 ease-in hover:text-xl pl-4.5"
             >
-              <Delete size={40}/>
+              <Delete size={40} />
             </button>
-            <BtnD digit="0" dispatch={dispatch} theme={theme}/>
-            <BtnD digit="." dispatch={dispatch} theme={theme}/>
+            <BtnD digit="0" dispatch={dispatch} theme={theme} />
+            <BtnD digit="." dispatch={dispatch} theme={theme} />
             <button
               onClick={handleEvaluate}
               className="bg-green-600 text-white rounded-full font-bold text-5xl w-20 h-20 pb-3 cursor-pointer hover:bg-gray-400 duration-300 ease-in hover:text-4xl"
