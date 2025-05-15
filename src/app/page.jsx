@@ -211,12 +211,12 @@ export default function Home() {
       </div>
       <div className="flex justify-center items-center w-full">
         <div className="h-[750px] w-[500px] bg-black rounded-2xl">
-          <div className="bg-gray-950 h-48 flex flex-col justify-center items-end pr-20 text-4xl font-bold rounded">
+          <div className="bg-gray-950 h-48 flex flex-col justify-center items-end pr-20 text-4xl font-bold rounded overflow-hidden">
             <span>
               {previousOperand}
-              {operation}
+              {operation}{currentOperand}
             </span>
-            <span>{currentOperand}</span>
+            
           </div>
           <div className="grid grid-cols-4 mt-10 ml-6 gap-4 max-sm:ml-2">
             <button
